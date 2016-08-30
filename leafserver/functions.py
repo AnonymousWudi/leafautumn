@@ -1,8 +1,10 @@
 # coding=utf-8
 
+from django.http import Http404
 from django.shortcuts import get_object_or_404
 
-def get_object_or_404(klass, *args, **kwargs):
+
+def get_object_or_None(klass, *args, **kwargs):
     """
     Uses get() to return an object, or raises a Http404 exception if the object
     does not exist.
@@ -14,8 +16,8 @@ def get_object_or_404(klass, *args, **kwargs):
     object is found.
     """
     try:
-    	ret = get_object_or_404(klass, *args, **kwargs)
+        ret = get_object_or_404(klass, *args, **kwargs)
     except Http404:
-    	return None
+        return None
     else:
-    	return ret
+        return ret
