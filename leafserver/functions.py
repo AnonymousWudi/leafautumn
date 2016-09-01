@@ -21,3 +21,11 @@ def get_object_or_None(klass, *args, **kwargs):
         return None
     else:
         return ret
+
+
+def get_int(value):
+    try:
+        result = int(value)
+    except ValueError:
+        result = 0
+    return result

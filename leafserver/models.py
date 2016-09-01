@@ -40,6 +40,8 @@ class Subject(models.Model):
     category = models.CharField(choices=CATEGORIES, max_length=50)
     subject_type = models.CharField(choices=SUBJECT_TYPES, max_length=10, null=True, blank=True)
     subject_content = models.ForeignKey('self', related_name='options_content', null=True)
+    date_added = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=True)
 
     @classmethod
     def get_subjects(cls):
@@ -51,6 +53,7 @@ class Subject(models.Model):
         :return:
         [{
             "question": "这是题目",
+            "type": "这是类型"
             "options":
             [{
                 "content": "这是选项1",
@@ -69,6 +72,7 @@ class Subject(models.Model):
             options = s.options_content.all()
             question = {
                 'question': s.content,
+                'type': u'文化' if s.subject_type == 'Teach' else u'礼宾',
                 'options': [{'content': o.content, 'is_answer': o.is_answer} for o in options],
             }
             ret.append(question)
