@@ -8,6 +8,8 @@ from views import IndexView, LoginView
 dashboard_urlpatterns = patterns('',
     url(r'^$', dashboard.Index.as_view()),
     url(r'^home_config/$', dashboard.HomeConfig.as_view()),
+    url(r'^question/config/$', dashboard.QuestionsConfig.as_view()),
+    url(r'^question/edit/$', dashboard.QuestionEdit.as_view()),
 )
 
 urlpatterns = patterns('',

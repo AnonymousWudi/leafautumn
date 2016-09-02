@@ -1,5 +1,6 @@
 # coding=utf-8
 
+
 class Enum(object):
     _enum_dict = {}
 
@@ -25,3 +26,7 @@ class Enum(object):
 
     def __contains__(self, key):
         return key in self.values()
+
+ERROR_DICT = {
+    9002: u'ID对应对象不存在'  # 创建日期为2016-09-02 故为9002
+}

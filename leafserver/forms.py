@@ -2,6 +2,7 @@
 
 from django.contrib import auth
 from django import forms
+from django.contrib.auth.models import User
 
 
 class LoginForm(forms.Form):
@@ -24,7 +25,7 @@ class LoginForm(forms.Form):
             email = self.cleaned_data['email']
             password = self.cleaned_data['password']
             if password:
-                users = User.objects.filter(email__iexact=username)
+                users = User.objects.filter(email__iexact=email)
                 if not users:
                     error = True
                 else:

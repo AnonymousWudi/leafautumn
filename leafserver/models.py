@@ -41,7 +41,40 @@ class Subject(models.Model):
     subject_type = models.CharField(choices=SUBJECT_TYPES, max_length=10, null=True, blank=True)
     subject_content = models.ForeignKey('self', related_name='options_content', null=True)
     date_added = models.DateTimeField(auto_now_add=True)
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)   # 用于表示题目可用不可用
+
+    @property
+    def format_output(self):
+        """
+        具体题目的格式化输出
+        :return:
+        {
+            "question": "这是题目",
+            "question_id": "题目ID",
+            "is_multi": "是否多选",
+            "type": "这是类型"
+            "options":
+            [{
+                "option_id": "选项ID",
+                "content": "这是选项1",
+                "is_answer": True
+            },
+            {
+                "option_id": "选项ID",
+                "content": "这是选项2",
+                "is_answer": False
+            },...]
+        }
+        """
+        options = self.options_content.all()
+        ret = {
+            'question': self.content,
+            'question_id': self.id,
+            'is_multi': self.is_multi,
+            'type': u'文化' if self.subject_type == 'Teach' else u'礼宾',
+            'options': [{'option_id': o.id, 'content': o.content, 'is_answer': o.is_answer} for o in options],
+        }
+        return ret
 
     @classmethod
     def get_subjects(cls):
@@ -50,16 +83,21 @@ class Subject(models.Model):
     @classmethod
     def get_subject_options(cls):
         """
+        获取所有题目的相关信息
         :return:
         [{
             "question": "这是题目",
+            "question_id": "题目ID",
+            "is_multi": "是否多选",
             "type": "这是类型"
             "options":
             [{
+                "option_id": "选项ID",
                 "content": "这是选项1",
                 "is_answer": True
             },
             {
+                "option_id": "选项ID",
                 "content": "这是选项2",
                 "is_answer": False
             },...]
@@ -69,12 +107,7 @@ class Subject(models.Model):
         ret = []
         subjects = cls.objects.filter(category='Subject').order_by('-id')
         for s in subjects:
-            options = s.options_content.all()
-            question = {
-                'question': s.content,
-                'type': u'文化' if s.subject_type == 'Teach' else u'礼宾',
-                'options': [{'content': o.content, 'is_answer': o.is_answer} for o in options],
-            }
+            question = s.format_output
             ret.append(question)
         return ret
 
@@ -102,4 +135,5 @@ class News(models.Model):
 
     title = models.CharField(max_length=100)
     content = models.TextField()
+    creator = models.ForeignKey(User)
     date_added = models.DateTimeField(auto_now_add=True)
