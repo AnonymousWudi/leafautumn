@@ -1,5 +1,7 @@
 # coding=utf-8
 
+import datetime
+
 from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
@@ -34,13 +36,13 @@ class Subject(models.Model):
         ('Option', u'选项'),
     )
 
-    content = models.CharField(max_length=100)
-    is_multi = models.BooleanField(default=False, None=True)
-    is_answer = models.BooleanField(default=False, None=True)
-    category = models.CharField(choices=CATEGORIES, max_length=50)
+    content = models.CharField(max_length=100, default=None)
+    is_multi = models.BooleanField(default=False, blank=True)
+    is_answer = models.BooleanField(default=False, blank=True)
+    category = models.CharField(choices=CATEGORIES, max_length=50, null=True, blank=True)
     subject_type = models.CharField(choices=SUBJECT_TYPES, max_length=10, null=True, blank=True)
     subject_content = models.ForeignKey('self', related_name='options_content', null=True)
-    date_added = models.DateTimeField(auto_now_add=True)
+    date_added = models.DateTimeField(auto_now_add=True, default=datetime.datetime.now())
     is_active = models.BooleanField(default=True)   # 用于表示题目可用不可用
 
     @property
@@ -112,6 +114,17 @@ class Subject(models.Model):
         return ret
 
 
+class News(models.Model):
+    """
+        北洋礼仪新闻
+    """
+
+    title = models.CharField(max_length=100)
+    content = models.TextField()
+    creator = models.ForeignKey(User)
+    date_added = models.DateTimeField(auto_now_add=True, default=datetime.datetime.now())
+
+
 class IndexPage(models.Model):
     """
         首页配置信息: 图片 + 文章
@@ -126,14 +139,3 @@ class IndexPage(models.Model):
     image = models.CharField(max_length=100)
     news = models.ForeignKey(News)
     ranking = models.IntegerField()
-
-
-class News(models.Model):
-    """
-        北洋礼仪新闻
-    """
-
-    title = models.CharField(max_length=100)
-    content = models.TextField()
-    creator = models.ForeignKey(User)
-    date_added = models.DateTimeField(auto_now_add=True)
