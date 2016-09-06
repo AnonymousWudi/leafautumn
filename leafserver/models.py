@@ -83,9 +83,10 @@ class Subject(models.Model):
         return cls.objects.filter(category='Subject').order_by('-id')
 
     @classmethod
-    def get_subject_options(cls):
+    def get_subject_options(cls, s_type=None):
         """
         获取所有题目的相关信息
+        :param s_type: 题目类型
         :return:
         [{
             "question": "这是题目",
@@ -106,8 +107,14 @@ class Subject(models.Model):
         },...]
 
         """
+
+        filters = {
+            'category': 'Subject',
+        }
+        if s_type:
+            filters['subject_type'] = s_type
         ret = []
-        subjects = cls.objects.filter(category='Subject').order_by('-id')
+        subjects = cls.objects.filter(**filters).order_by('-id')
         for s in subjects:
             question = s.format_output
             ret.append(question)
