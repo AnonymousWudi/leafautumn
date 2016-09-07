@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>QuestionConfig</title>
+</head>
+<body>
+    {% for s in subjects %}
+        <p>{{ s.question }}</p>
+        <p>{{ s.question_id }}</p>
+        <p>{{ s.is_multi }}</p>
+        <p>{{ s.type }}</p>
+        {% for o in s.options %}
+            <p>{{ o.option_id }}</p>
+            <p>{{ o.content }}</p>
+            <p>{{ o.is_answer }}</p>
+        {% endfor %}
+    {% endfor %}
+</body>
+</html>
